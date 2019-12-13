@@ -20,6 +20,8 @@ GET
 
 ## How to deploy
 
+aws cloudformation create-stack --stack-name api-test --template-body file://./infrastructure\s3.json' --capabilities CAPABILITY_NAMED_IAM 
+
 ## Testing
 
 Test url >

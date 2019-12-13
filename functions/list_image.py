@@ -3,7 +3,7 @@ import boto3
 def list_image():
     try:
         s3 = boto3.resource('s3')
-        bucket = s3.Bucket('hertz-prod-biometrics')
+        bucket = s3.Bucket('saved-images')
         response = {"images":[]}
 
         for bucket_obj in bucket.objects.all():
