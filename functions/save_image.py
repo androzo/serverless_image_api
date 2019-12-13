@@ -19,10 +19,9 @@ def save_image(url, name):
             s3.upload_fileobj(f, "hertz-prod-biometrics", name)
         
         # remove image
-        dir_path = os.path.dirname(os.path.realpath(name))
-        os.remove(dir_path)
+        os.remove(os.path.dirname(os.path.realpath(name)) + "\\" + name)
 
-        return("Saved image to S3")
+        return(f"Saved image [{name}] from [{url}] to S3")
 
     except BaseException as error:
         print("Failed to save image to S3")
