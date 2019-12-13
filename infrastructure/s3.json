@@ -1,0 +1,19 @@
+{
+  "Resources": {
+      "S3Bucket": {
+          "Type": "AWS::S3::Bucket",
+          "Properties": {
+              "AccessControl": "PublicRead",
+              "BucketName" : "saved_images"
+          }
+      }      
+  },
+  "Outputs": {
+      "BucketName": {
+          "Value": {
+              "Ref": "S3Bucket"
+          },
+          "Description": "Name of the Amazon S3 bucket."
+      }
+  }
+}
