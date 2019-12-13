@@ -22,6 +22,9 @@ GET
 
 ## Testing
 
+Test url >
+http://127.0.0.1:5000/save_image?name=buka.jpeg&url=https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg
+
 
 
 
