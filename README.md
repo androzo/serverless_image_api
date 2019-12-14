@@ -31,7 +31,9 @@ $ make update
 ## Testing
 
 # Access
-1. 
+1. Access your AWS Console and go to IAM service
+2. Click on Users > api_caller > Security credentials and create a new access key
+3. This key will be used to authenticate your requests
 
 # Save image API
 1. Access your AWS Console and go to API Gateway service
