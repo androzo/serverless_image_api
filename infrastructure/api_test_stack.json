@@ -1,5 +1,143 @@
 {
   "Resources": {
+   "RestAPICaller":{
+      "Type":"AWS::IAM::User",
+      "Properties":{
+         "UserName":"api_caller"
+      }
+   },
+   "RestAPICallerManagedPolicy":{
+      "Type":"AWS::IAM::ManagedPolicy",
+      "DependsOn":[
+         "SaveImageRestAPI",
+         "SaveImageAPIFunction",
+         "ListImageRestAPI",
+         "ListImageAPIFunction",
+         "RestAPICaller"
+      ],
+      "Properties":{
+         "Description":"API Caller",
+         "PolicyDocument":{
+            "Version":"2012-10-17",
+            "Statement":[
+               {
+                  "Sid":"SaveImageRestAPICaller001",
+                  "Effect":"Allow",
+                  "Action":"execute-api:Invoke",
+                  "Resource":{
+                     "Fn::Join":[
+                        "",
+                        [
+                           "arn:aws:execute-api:",
+                           {
+                              "Ref":"AWS::Region"
+                           },
+                           ":",
+                           {
+                              "Ref":"AWS::AccountId"
+                           },
+                           ":",
+                           {
+                              "Ref":"SaveImageRestAPI"
+                           },
+                           "/*/POST/*"
+                        ]
+                     ]
+                  }
+               },
+               {
+                  "Sid":"SaveImageRestAPICaller002",
+                  "Effect":"Allow",
+                  "Action":"lambda:InvokeFunction",
+                  "Resource":{
+                     "Fn::Join":[
+                        "",
+                        [
+                           "arn:aws:lambda:",
+                           {
+                              "Ref":"AWS::Region"
+                           },
+                           ":",
+                           {
+                              "Ref":"AWS::AccountId"
+                           },
+                           ":function:",
+                           {
+                              "Ref":"SaveImageAPIFunction"
+                           }
+                        ]
+                     ]
+                  }
+               },
+               {
+                  "Sid":"SaveImageRestAPICaller003",
+                  "Effect":"Allow",
+                  "Action":"s3:GetObject",
+                  "Resource":"arn:aws:s3:::api-test-2019-saved-images/*"
+               },
+               {
+                  "Sid":"ListImageRestAPICaller001",
+                  "Effect":"Allow",
+                  "Action":"execute-api:Invoke",
+                  "Resource":{
+                     "Fn::Join":[
+                        "",
+                        [
+                           "arn:aws:execute-api:",
+                           {
+                              "Ref":"AWS::Region"
+                           },
+                           ":",
+                           {
+                              "Ref":"AWS::AccountId"
+                           },
+                           ":",
+                           {
+                              "Ref":"ListImageRestAPI"
+                           },
+                           "/*/POST/*"
+                        ]
+                     ]
+                  }
+               },
+               {
+                  "Sid":"ListImageRestAPICaller002",
+                  "Effect":"Allow",
+                  "Action":"lambda:InvokeFunction",
+                  "Resource":{
+                     "Fn::Join":[
+                        "",
+                        [
+                           "arn:aws:lambda:",
+                           {
+                              "Ref":"AWS::Region"
+                           },
+                           ":",
+                           {
+                              "Ref":"AWS::AccountId"
+                           },
+                           ":function:",
+                           {
+                              "Ref":"ListImageAPIFunction"
+                           }
+                        ]
+                     ]
+                  }
+               },
+               {
+                  "Sid":"ListImageRestAPICaller003",
+                  "Effect":"Allow",
+                  "Action":"s3:GetObject",
+                  "Resource":"arn:aws:s3:::api-test-2019-saved-images/*"
+               }
+            ]
+         },
+         "Users":[
+            "api_caller"
+         ],
+         "ManagedPolicyName":"API_Caller_Policy"
+      }
+      },
       "S3Bucket": {
           "DependsOn":"IAMLambdaServiceRole",
           "Type": "AWS::S3::Bucket",
@@ -187,14 +325,24 @@
                              ]
                           },
                           "Effect":"Allow"
-                       }
+                       },
+                       {
+                        "Action":"lambda:InvokeFunction",
+                        "Resource":{
+                           "Fn::GetAtt":[
+                              "ListImageAPIFunction",
+                              "Arn"
+                           ]
+                        },
+                        "Effect":"Allow"
+                     }
                     ]
                  }
               }
            ]
         }
      },
-     "RestAPI":{
+     "SaveImageRestAPI":{
       "Type":"AWS::ApiGateway::RestApi",
       "Properties":{
          "Description":"API to save image from URL",
@@ -326,88 +474,7 @@
             }
          }
       }
-   },
-   "RestAPICaller":{
-      "Type":"AWS::IAM::User",
-      "Properties":{
-         "UserName":"save_image_caller"
-      }
-   },
-   "RestAPICallerManagedPolicy":{
-      "Type":"AWS::IAM::ManagedPolicy",
-      "DependsOn":[
-         "RestAPI",
-         "SaveImageAPIFunction",
-         "RestAPICaller"
-      ],
-      "Properties":{
-         "Description":"save_image_api Caller",
-         "PolicyDocument":{
-            "Version":"2012-10-17",
-            "Statement":[
-               {
-                  "Sid":"RestAPICaller001",
-                  "Effect":"Allow",
-                  "Action":"execute-api:Invoke",
-                  "Resource":{
-                     "Fn::Join":[
-                        "",
-                        [
-                           "arn:aws:execute-api:",
-                           {
-                              "Ref":"AWS::Region"
-                           },
-                           ":",
-                           {
-                              "Ref":"AWS::AccountId"
-                           },
-                           ":",
-                           {
-                              "Ref":"RestAPI"
-                           },
-                           "/*/POST/*"
-                        ]
-                     ]
-                  }
-               },
-               {
-                  "Sid":"RestAPICaller002",
-                  "Effect":"Allow",
-                  "Action":"lambda:InvokeFunction",
-                  "Resource":{
-                     "Fn::Join":[
-                        "",
-                        [
-                           "arn:aws:lambda:",
-                           {
-                              "Ref":"AWS::Region"
-                           },
-                           ":",
-                           {
-                              "Ref":"AWS::AccountId"
-                           },
-                           ":function:",
-                           {
-                              "Ref":"SaveImageAPIFunction"
-                           }
-                        ]
-                     ]
-                  }
-               },
-               {
-                  "Sid":"RestAPICaller003",
-                  "Effect":"Allow",
-                  "Action":"s3:GetObject",
-                  "Resource":"arn:aws:s3:::api-test-2019-saved-images/*"
-               }
-            ]
-         },
-         "Users":[
-            "save_image_caller"
-         ],
-         "ManagedPolicyName":"API_Caller_Policy"
-      }
-   },
+   },   
    "ApiGatewayCloudWatchLogsRole":{
       "Type":"AWS::IAM::Role",
       "Properties":{
@@ -463,14 +530,14 @@
          }
       }
    },
-   "RestAPIStage":{
+   "SaveImageRestAPIStage":{
       "Type":"AWS::ApiGateway::Stage",
       "DependsOn":[
          "ApiGatewayAccount"
       ],
       "Properties":{
          "DeploymentId":{
-            "Ref":"RestAPIDeployment"
+            "Ref":"SaveImageRestAPIDeployment"
          },
          "MethodSettings":[
             {
@@ -481,19 +548,187 @@
             }
          ],
          "RestApiId":{
-            "Ref":"RestAPI"
+            "Ref":"SaveImageRestAPI"
          },
          "StageName":"dev"
       }
    },
-   "RestAPIDeployment":{
+   "SaveImageRestAPIDeployment":{
       "Type":"AWS::ApiGateway::Deployment",
       "DependsOn":[
-         "RestAPI"
+         "SaveImageRestAPI"
       ],
       "Properties":{
          "RestApiId":{
-            "Ref":"RestAPI"
+            "Ref":"SaveImageRestAPI"
+         },
+         "StageName":"qa"
+      }
+   },
+   "ListImageRestAPI":{
+      "Type":"AWS::ApiGateway::RestApi",
+      "Properties":{
+         "Description":"API to list images from S3",
+         "Name":"list_images_api",
+         "EndpointConfiguration":{
+            "Types":[
+               "REGIONAL"
+            ]
+         },
+         "Body":{
+            "swagger":"2.0",
+            "info":{
+               "description":"API to list images from S3",
+               "version":"1.0.0",
+               "title":"list_image_api"
+            },
+            "schemes":[
+               "https"
+            ],
+            "paths":{
+               "/":{
+
+               },
+               "/list_images":{
+                  "post":{
+                     "produces":[
+                        "application/json",
+                        "application/customer-error",
+                        "application/api_not_found",
+                        "application/no_record",
+                        "application/api_error"
+                     ],
+                     "responses":{
+                        "200":{
+                           "description":"200 response",
+                           "schema":{
+                              "$ref":"#/definitions/Empty"
+                           }
+                        },
+                        "201":{
+                           "description":"201 response"
+                        },
+                        "204":{
+                           "description":"204 response"
+                        },
+                        "230":{
+                           "description":"230 response"
+                        },
+                        "231":{
+                           "description":"231 response"
+                        },
+                        "232":{
+                           "description":"232 response"
+                        },
+                        "233":{
+                           "description":"233 response"
+                        }
+                     },
+                     "security":[
+                        {
+                           "sigv4":[
+
+                           ]
+                        }
+                     ],
+                     "x-amazon-apigateway-integration":{
+                        "responses":{
+                           "default":{
+                              "statusCode":"200"
+                           }
+                        },
+                        "uri":{
+                           "Fn::Join":[
+                              ":",
+                              [
+                                 "arn:aws:apigateway",
+                                 {
+                                    "Ref":"AWS::Region"
+                                 },
+                                 "lambda:path/2015-03-31/functions/arn:aws:lambda",
+                                 {
+                                    "Ref":"AWS::Region"
+                                 },
+                                 {
+                                    "Ref":"AWS::AccountId"
+                                 },
+                                 "function",
+                                 {
+                                    "Fn::Join":[
+                                       "",
+                                       [
+                                          {
+                                             "Ref":"ListImageAPIFunction"
+                                          },
+                                          "/invocations"
+                                       ]
+                                    ]
+                                 }
+                              ]
+                           ]
+                        },
+                        "passthroughBehavior":"when_no_match",
+                        "httpMethod":"POST",
+                        "contentHandling":"CONVERT_TO_TEXT",
+                        "credentials":{
+                           "Fn::GetAtt":[
+                              "IAMAPIServiceRole",
+                              "Arn"
+                           ]
+                        },
+                        "type":"aws"
+                     }
+                  }
+               }
+            },
+            "securityDefinitions":{
+               "sigv4":{
+                  "type":"apiKey",
+                  "name":"Authorization",
+                  "in":"header",
+                  "x-amazon-apigateway-authtype":"awsSigv4"
+               }
+            },
+            "definitions":{
+               "Empty":{
+                  "type":"object",
+                  "title":"Empty Schema"
+               }
+            }
+         }
+      }
+   },
+   "ListImageRestAPIStage":{
+      "Type":"AWS::ApiGateway::Stage",
+      "DependsOn":[
+         "ApiGatewayAccount"
+      ],
+      "Properties":{
+         "DeploymentId":{
+            "Ref":"ListImageRestAPIDeployment"
+         },
+         "MethodSettings":[
+            {
+               "DataTraceEnabled":true,
+               "HttpMethod":"*",
+               "LoggingLevel":"INFO",
+               "ResourcePath":"/*"
+            }
+         ],
+         "RestApiId":{
+            "Ref":"ListImageRestAPI"
+         },
+         "StageName":"dev"
+      }
+   },
+   "ListImageRestAPIDeployment":{
+      "Type":"AWS::ApiGateway::Deployment",
+      "DependsOn":[
+         "ListImageRestAPI"
+      ],
+      "Properties":{
+         "RestApiId":{
+            "Ref":"ListImageRestAPI"
          },
          "StageName":"qa"
       }
