@@ -2,8 +2,6 @@
 
 This stack will create two APIs that will save an image to an S3 bucket and list all objects in the bucket
 
-## AWS Resources
-- 
 
 ## Requirements
 
@@ -67,3 +65,17 @@ TODO: insert/describe other make cmdlets
         * In the service you should use 'execute-api'
 5. Response:
     * If everything worked you will see a "Saved image to S3" message on the response body
+
+## AWS Cloudformation Resources
+- AWS::IAM::User
+- AWS::IAM::Role
+- AWS::IAM::ManagedPolicy
+- AWS::S3::Bucket
+- AWS::S3::BucketPolicy
+- AWS::ApiGateway::Account
+- AWS::ApiGateway::Stage
+- AWS::ApiGateway::RestApi
+- AWS::ApiGateway::Deployment
+- AWS::ApiGateway::RestApi
+- AWS::Lambda::Function
+- AWS::Logs::LogGroup
