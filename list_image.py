@@ -1,6 +1,6 @@
 import boto3
 
-def list_image():
+def lambda_handler():
     try:
         s3 = boto3.resource('s3')
         bucket = s3.Bucket('api-test-2019-saved-images')

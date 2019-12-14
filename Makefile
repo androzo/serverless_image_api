@@ -1,18 +1,20 @@
-Zip lambda files
-`zip functions/zip/list_image.zip functions/list_image/index.py`
-`zip functions/zip/save_image.zip functions/save_image/index.py`
+initialize: zip_lambda create_s3_bucket upload_lambda deploy_stack
 
-Create a new S3 to store the lambda functions as follows
-`aws s3api create-bucket --bucket api-test-2019-lambda-functions --region us-east-1`
-`aws s3 cp functions/zip/ s3://api-test-2019-lambda-functions/ --recursive`
+zip_lambda:
+	zip zip/list_image.zip list_image.py
+	zip zip/save_image.zip save_image.py
 
-Upload the lambda functions:
-`aws s3 cp functions/zip/ s3://api-test-2019-lambda-functions/ --recursive`
+create_s3_bucket:
+	aws s3api create-bucket --bucket api-test-2019-lambda-functions --region us-east-1
 
-Deploy the local JSON stack using AWS cli
-`aws cloudformation create-stack --stack-name api-test --template-body 'file://./infrastructure\s3.json' --capabilities CAPABILITY_NAMED_IAM`
+upload_lambda:
+	aws s3 cp zip/ s3://api-test-2019-lambda-functions/ --recursive
 
-# Rollback
+deploy_stack:
+	aws cloudformation create-stack --stack-name api-test --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
 
-Delete stack
-`aws cloudformation delete-stack --stack-name api-test`
+delete_stack:
+	aws cloudformation delete-stack --stack-name api-test
+
+delete_s3_bucket:
+	aws s3 rm s3://api-test-2019-lambda-functions --recursive

@@ -115,7 +115,7 @@
         "Properties":{
            "FunctionName":"list-images",
            "Description":"Function to Get Vehicle Image from S3 Bucket",
-           "Handler":"index.handler",
+           "Handler":"list_image.lambda_handler",
            "Runtime":"python3.6",
            "Code":{              
               "S3Bucket":"api-test-2019-lambda-functions",
@@ -136,7 +136,7 @@
         "Properties":{
            "FunctionName":"save-image",
            "Description":"Function to Get Vehicle Image from S3 Bucket",
-           "Handler":"index.handler",
+           "Handler":"save_image.lambda_handler",
            "Runtime":"python3.6",
            "Code":{              
               "S3Bucket":"api-test-2019-lambda-functions",

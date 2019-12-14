@@ -3,7 +3,7 @@ import requests
 import shutil
 import os
 
-def save_image(url, name):
+def lambda_handler(url, name):
     try:
         s3 = boto3.client('s3')
 
