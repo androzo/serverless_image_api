@@ -1,6 +1,8 @@
-all: load_lambda deploy_stack
+create: load_lambda deploy_stack
 
-delete_all: delete_stack unload_lambda
+update: update_stack
+
+destroy: delete_stack unload_lambda
 
 load_lambda:
 	@echo
@@ -50,3 +52,8 @@ unload_lambda:
 	@echo
 	@echo '[Deleting S3 Bucket..]'
 	-aws s3 rb s3://api-test-2019-lambda-functions
+
+update_stack:
+	@echo
+	@echo '[Updating stack..]'
+	aws cloudformation update-stack --stack-name api-test --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
