@@ -16,7 +16,7 @@ def save_image(url, name):
 
         # upload image to s3
         with open(name, "rb") as f:
-            s3.upload_fileobj(f, "saved-images", name)
+            s3.upload_fileobj(f, "api-test-2019-saved-images", name)
         
         # remove image
         os.remove(os.path.dirname(os.path.realpath(name)) + "\\" + name)

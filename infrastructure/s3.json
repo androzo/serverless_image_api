@@ -1,19 +1,156 @@
 {
   "Resources": {
       "S3Bucket": {
+          "DependsOn":"IAMLambdaServiceRole",
           "Type": "AWS::S3::Bucket",
           "Properties": {
-              "AccessControl": "PublicRead",
-              "BucketName" : "saved-images"
+              "BucketName" : "api-test-2019-saved-images"
           }
-      }      
-  },
-  "Outputs": {
-      "BucketName": {
-          "Value": {
-              "Ref": "S3Bucket"
+      },
+      "BucketPolicy": {
+        "Type": "AWS::S3::BucketPolicy",
+        "Properties": {
+          "Bucket": "api-test-2019-saved-images",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "s3:GetObject",
+                  "s3:PutObject"
+                ],
+                "Resource": "arn:aws:s3:::api-test-2019-saved-images/*",
+                "Condition": {},
+                "Principal":{
+                    "AWS":[
+                      {
+                          "Fn::Join":[
+                            ":",
+                            [
+                                "arn:aws:iam:",
+                                {
+                                  "Ref":"AWS::AccountId"
+                                },
+                                "role/LambdaServiceRole"
+                            ]
+                          ]
+                      }
+                    ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "IAMLambdaServiceRole": {
+          "Type": "AWS::IAM::Role",
+          "Properties": {
+          "RoleName": "LambdaServiceRole",
+               "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+                },
+              "Action": "sts:AssumeRole"
+            }
+                ]
+              },
+              "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"],
+              "Policies": [{
+                  "PolicyName": "LambdaServiceRolePolicy",
+                  "PolicyDocument": {
+                      "Version": "2012-10-17",
+                      "Statement": [
+                {
+                "Action": ["s3:Get*","s3:List*","s3:Put*"],
+                "Resource": "*",
+                "Effect": "Allow"
+              }
+                      ]
+                  }
+              }]
+          }
+      },
+      "ListImagesLogGroup":{
+         "Type":"AWS::Logs::LogGroup",
+         "DependsOn":"ListImageAPIFunction",
+         "Properties":{
+            "LogGroupName":{
+               "Fn::Join":[
+                  "",
+                  [
+                     "/aws/lambda/",
+                     {
+                        "Ref":"ListImageAPIFunction"
+                     }
+                  ]
+               ]
+            }
+         }
+      },
+     "SaveImageLogGroup":{
+        "Type":"AWS::Logs::LogGroup",
+        "DependsOn":"SaveImageAPIFunction",
+        "Properties":{
+           "LogGroupName":{
+              "Fn::Join":[
+                 "",
+                 [
+                    "/aws/lambda/",
+                    {
+                       "Ref":"SaveImageAPIFunction"
+                    }
+                 ]
+              ]
+           }
+        }
+     },
+     "ListImageAPIFunction":{
+        "Type":"AWS::Lambda::Function",
+        "Properties":{
+           "FunctionName":"list-images",
+           "Description":"Function to Get Vehicle Image from S3 Bucket",
+           "Handler":"index.handler",
+           "Runtime":"python3.6",
+           "Code":{              
+              "S3Bucket":"api-test-2019-lambda-functions",
+              "S3Key":"list_image.zip"
+           },
+           "MemorySize":1024,
+           "Role":{
+              "Fn::GetAtt":[
+                 "IAMLambdaServiceRole",
+                 "Arn"
+              ]
+           },
+           "Timeout":60
+        }
+     },
+     "SaveImageAPIFunction":{
+        "Type":"AWS::Lambda::Function",
+        "Properties":{
+           "FunctionName":"save-image",
+           "Description":"Function to Get Vehicle Image from S3 Bucket",
+           "Handler":"index.handler",
+           "Runtime":"python3.6",
+           "Code":{              
+              "S3Bucket":"api-test-2019-lambda-functions",
+              "S3Key":"save_image.zip"
+           },
+           "MemorySize":1024,
+           "Role":{
+          "Fn::GetAtt":[
+                "IAMLambdaServiceRole",
+                "Arn"
+            ]
           },
-          "Description": "Name of the Amazon S3 bucket."
-      }
-  }
+          "Timeout":60
+        }
+     }
+  } 
 }
