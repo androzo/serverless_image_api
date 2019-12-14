@@ -22,7 +22,7 @@ if($deployStack){
     Invoke-Command -ScriptBlock { aws cloudformation create-stack --stack-name api-test --template-body 'file://./infrastructure\s3.json' --capabilities CAPABILITY_NAMED_IAM }
 }
 
-if($tearDown){
+if($tearDownStack){
     Invoke-Command -ScriptBlock { aws cloudformation delete-stack --stack-name api-test }
     Write-Host "Sent tear down command!"
 }
