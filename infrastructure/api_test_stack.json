@@ -204,11 +204,16 @@
                   "PolicyDocument": {
                       "Version": "2012-10-17",
                       "Statement": [
-                {
-                "Action": ["s3:Get*","s3:List*","s3:Put*"],
-                "Resource": "*",
-                "Effect": "Allow"
-              }
+                           {
+                              "Action": ["s3:Get*","s3:List*","s3:Put*"],
+                              "Resource": "*",
+                              "Effect": "Allow"
+                           },{
+                              "Action": ["dynamodb:PutItem"],
+                              "Resource": "arn:aws:dynamodb:::table/api-test-table",
+                              "Effect": "Allow"
+                           }
+
                       ]
                   }
               }]
@@ -732,6 +737,28 @@
          },
          "StageName":"qa"
       }
-   }
+   },
+   "DynamoDBTable" : {
+      "Type" : "AWS::DynamoDB::Table",
+      "Properties" : {
+	"TableName" : "api-test-table",
+        "AttributeDefinitions" : [
+          {
+            "AttributeName" : "SaveId",
+            "AttributeType" : "S"
+          }
+        ],
+        "KeySchema" : [
+          {
+            "AttributeName" : "SaveId",
+            "KeyType" : "HASH"
+          }
+        ],
+        "ProvisionedThroughput" : {
+         "ReadCapacityUnits" : "5",
+         "WriteCapacityUnits" : "5"
+       }
+      }
+    }
   }
 }

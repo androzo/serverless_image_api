@@ -1,6 +1,6 @@
 # API Test
 
-This stack will create two APIs that will save an image to an S3 bucket and list all objects in the bucket
+This stack creates two rest APIs using serverless architecture.
 
 
 ## Requirements
@@ -79,3 +79,4 @@ TODO: insert/describe other make cmdlets
 - AWS::ApiGateway::RestApi
 - AWS::Lambda::Function
 - AWS::Logs::LogGroup
+- AWS::DynamoDB::Table
