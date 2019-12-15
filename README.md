@@ -13,17 +13,12 @@ Deploys the infrastructure to AWS account that is configured in the awscli:
 ```
 $ make all
 ```
-*Additionally, run `make update_stack` to update your stack, and `make destroy` to tear down the environment.
-
-
-## Test
+*Additionally, you can run `make update_stack` to update your stack, and `make destroy` to tear down the environment.
 
 ## Authentication
 In order to secure authentication to requests, AWS Signature is used.
-- Keys
-To retrieve keys automatically generated run `make get_keys`
-- Endpoints
-To retrieve endpoints created in API Gateway run `make get_endpoints`
+- Run `make get_keys` to retrieve keys automatically generated
+- Run `make get_endpoints` to retrieve API Gateway endpoints
 
 **List Images**
 ----
