@@ -8,8 +8,6 @@ import random
 
 def lambda_handler(event, context):
     try:
-        s3 = boto3.client('s3')
-        
         url = event["url"]
         name = event["name"]
         bucket = "api-test-2019-saved-images"
@@ -26,22 +24,28 @@ def lambda_handler(event, context):
                 shutil.copyfileobj(r.raw, f)
 
         # upload image to s3
+        s3 = boto3.client('s3')
         now = datetime.now() 
         date_time = now.strftime("%m/%d/%Y-%H:%M:%S")
         with open(filepath, "rb") as f:
             s3.upload_fileobj(f, bucket, name)
         
         # remove image
-        os.remove(filepath)
-        
+        os.remove(filepath)        
         
         # save info on database table
         dynamodb = boto3.client('dynamodb')
-
         dynamodb.put_item(TableName='api-test-table', Item={'SaveId':{'S': save_id},'Name':{'S': name}, 'Url':{'S': url}, 'S3Path':{'S': s3_path}, 'Date':{'S': date_time}})
-        
-        return(f"Saved image [{name}] from [{url}] to S3")
+
+        return {
+            "result" : "Saved successfully",
+            "name" : name,
+            "storage" : s3_path,
+            "date" : date_time
+        }
 
     except BaseException as error:
-        print("Failed to save image to S3")
-        return str(error)
+        return {
+            "result" : "Failed to save image",
+            "error" : str(error)
+        }

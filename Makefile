@@ -1,7 +1,5 @@
 create: load_lambda deploy_stack
 
-update: update_stack
-
 destroy: delete_stack unload_lambda
 
 load_lambda:

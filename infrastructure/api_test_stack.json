@@ -210,7 +210,7 @@
                               "Effect": "Allow"
                            },{
                               "Action": ["dynamodb:PutItem"],
-                              "Resource": "arn:aws:dynamodb:::table/api-test-table",
+                              "Resource": "*",
                               "Effect": "Allow"
                            }
 
