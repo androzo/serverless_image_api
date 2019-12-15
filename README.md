@@ -9,65 +9,77 @@ This stack creates two rest APIs using serverless architecture.
 * Postman (or another AWS Signature compatible tool)
 
 ### Deploy
+Deploys the infrastructure to AWS account that is configured in the awscli:
 ```
 $ make all
 ```
-
-### Destroy
-```
-$ make delete_all
-```
-
-### Update
-```
-$ make update
-```
-
-TODO: insert/describe other make cmdlets
+*Additionally, run `make update_stack` to update your stack, and `make destroy` to tear down the environment.
 
 
-## Testing
+## Test
 
-### Access
-1. Access your AWS Console and go to IAM service
-2. Click on Users > api_caller > Security credentials and create a new access key
-3. This key will be used to authenticate your requests
+## Authentication
+In order to secure authentication to requests, AWS Signature is used.
+- Keys
+To retrieve keys automatically generated run `make get_keys`
+- Endpoints
+To retrieve endpoints created in API Gateway run `make get_endpoints`
 
-### Save image API
-1. Access your AWS Console and go to API Gateway service
-2. Click on the 'save_image_api' and navigate to Stages
-3. Click on the 'dev' stage and you should see the invoke URL on the right top of the Console
-4. Open your Postman and create a new POST request with following the options:
-    * URL: https://your_invoke_url/dev/save_image
-    * Body: application/json:
-        ```
-        {
-            url: "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg",
-            name: "sample_image_name.jpeg"
-        }
-        ```
-    * Authorization: AWS Signature
-        * Input your access/secret/region for your 'api_caller' user
-        * In the service you should use 'execute-api'
-5. Response:
-    * If everything worked you will see a "Saved image to S3" message on the response body
+**List Images**
+----
+  Returns json data with images save in the S3 Bucket.
+
+* **URL**
+
+  /list_images
+
+* **Method:**
+
+  `POST`
+
+* **Data Params**
+
+  None
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**  `{ "saved_images": [ "image.png", "image1.png" ] }` 
+ 
+* **Error Response:**
+
+    **Content:** `{ result : "Failed to list images",  error : "<error_stack>" }`
 
 
-### List images API
-1. Access your AWS Console and go to API Gateway service
-2. Click on the 'list_images_api' and navigate to Stages
-3. Click on the 'dev' stage and you should see the invoke URL on the right top of the Console
-4. Open your Postman and create a new POST request with following the options:
-    * URL: https://your_invoke_url/dev/save_image
-    * Body is not required
-    * Authorization: AWS Signature
-        * Input your access/secret/region for your 'api_caller' user
-        * In the service you should use 'execute-api'
-5. Response:
-    * If everything worked you will see a "Saved image to S3" message on the response body
+**Save Image**
+----
+  Saves an image in a S3 bucket and some information on a DynamoDB Table.
+
+* **URL**
+
+  /save_image
+
+* **Method:**
+
+  `POST`
+
+* **Data Params**
+
+  `{"url": "https://icons.com/icon_f7021.png","name": "my_icon.png"}`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:**  `{ "result" : "Saved successfully", "name" : name, "storage" : s3_path, "date" : date_time }` 
+ 
+* **Error Response:**
+
+    **Content:** `{ result : "Failed to save image",  error : "<error_stack>" }`
+
 
 ## AWS Cloudformation Resources
 - AWS::IAM::User
+- AWS::IAM::AccessKey
 - AWS::IAM::Role
 - AWS::IAM::ManagedPolicy
 - AWS::S3::Bucket

@@ -1,4 +1,22 @@
 {
+  "Outputs" : {
+      "AccessKeyID" : {
+      "Description" : "API Caller access key",
+      "Value" : {"Ref":"RestAPICallerKey"}
+      },
+      "AccessKeySecret" : {
+         "Description" : "API Caller secret key",
+         "Value" : { "Fn::GetAtt":["RestAPICallerKey","SecretAccessKey"] }
+      },
+      "SaveImageURL" : {
+         "Description" : "Save Image API endpoint",
+         "Value" : { "Fn::Sub" : [ "https://${SaveImageEndpoint}.execute-api.${AWS::Region}.amazonaws.com/dev/save_image", { "SaveImageEndpoint": {"Ref" : "SaveImageRestAPI"}} ]}
+      },
+      "ListImagesURL" : {
+         "Description" : "List Images API endpoint",
+         "Value" : { "Fn::Sub" : [ "https://${ListImageEndpoint}.execute-api.${AWS::Region}.amazonaws.com/dev/list_images", { "ListImageEndpoint": {"Ref" : "ListImageRestAPI"}} ]}
+      }
+   },
   "Resources": {
    "RestAPICaller":{
       "Type":"AWS::IAM::User",
@@ -6,6 +24,14 @@
          "UserName":"api_caller"
       }
    },
+   "RestAPICallerKey":{
+      "Type" : "AWS::IAM::AccessKey",
+      "DependsOn" : "RestAPICaller",
+      "Properties" : {
+          "Status" : "Active",
+          "UserName" : "api_caller"
+        }
+    },
    "RestAPICallerManagedPolicy":{
       "Type":"AWS::IAM::ManagedPolicy",
       "DependsOn":[

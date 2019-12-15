@@ -1,3 +1,5 @@
+#!/bin/bash
+
 create: load_lambda deploy_stack
 
 destroy: delete_stack unload_lambda
@@ -55,3 +57,14 @@ update_stack:
 	@echo
 	@echo '[Updating stack..]'
 	aws cloudformation update-stack --stack-name api-test --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
+
+get_keys:
+	@echo
+	aws cloudformation describe-stacks --stack-name api-test --query 'Stacks[0].Outputs[0].OutputValue'
+	aws cloudformation describe-stacks --stack-name api-test --query 'Stacks[0].Outputs[1].OutputValue'
+
+get_endpoints:
+	@echo "[List Images Endpoint]"	
+	aws cloudformation describe-stacks --stack-name api-test --query 'Stacks[0].Outputs[2].OutputValue'
+	@echo "[Save Image Endpoint]"
+	aws cloudformation describe-stacks --stack-name api-test --query 'Stacks[0].Outputs[3].OutputValue'
