@@ -7,6 +7,7 @@ This stack creates two rest APIs using serverless architecture.
 
 * AWS cli installed and configured https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-install.html
 * Postman (or another AWS Signature compatible tool)
+* Linux or MacOS
 
 ### Deploy
 Deploys the infrastructure to AWS account that is configured in the awscli:
@@ -48,7 +49,7 @@ In order to secure authentication to requests, AWS Signature is used.
 
 **Save Image**
 ----
-  Saves an image in a S3 bucket and some information on a DynamoDB Table.
+  Saves image in a S3 bucket and logs additional information on a DynamoDB Table.
 
 * **URL**
 
