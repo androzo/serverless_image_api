@@ -27,7 +27,7 @@ deploy_stack:
 	@echo '[Deploying stack..]'
 	aws cloudformation create-stack \
 		--stack-name $(stack_name) \
-		--template-body 'file://./infrastructure/api_test_stack.json' \
+		--template-body 'file://./infrastructure/stack.json' \
 		--capabilities CAPABILITY_NAMED_IAM \
 		--parameters ParameterKey=ImageS3BucketName,ParameterValue=$(image_bucket) ParameterKey=LambdaS3BucketName,ParameterValue=$(lambda_bucket)
 
@@ -59,7 +59,7 @@ update_stack:
 	@echo
 	@echo '[Updating stack..]'
 	aws cloudformation update-stack --stack-name $(stack_name) \
-		--template-body 'file://./infrastructure/api_test_stack.json' \
+		--template-body 'file://./infrastructure/stack.json' \
 		--capabilities CAPABILITY_NAMED_IAM \
 		--parameters ParameterKey=ImageS3BucketName,ParameterValue=$(image_bucket) ParameterKey=LambdaS3BucketName,ParameterValue=$(lambda_bucket) 
 
