@@ -11,10 +11,10 @@ This stack creates a REST API using serverless architecture in AWS. Two features
 * Linux or MacOS
 
 ## Deploy the infrastructure
-First you need to set your environment variables in order to customize resource names as you like:
+First, you need to set your environment variables in order to customize resource names as you like:
 * stack_name: CloudFormation Stack
 * image_bucket: S3 Bucket that will store saved images
-* lambda_bucket: S3 BUcket that will store Lambda functions
+* lambda_bucket: S3 Bucket that will store Lambda functions
 ```
 $ export stack_name=sample-image-api-stack \
          image_bucket=sample-image-api-saved-images \
