@@ -31,10 +31,10 @@ $ make create
 ## Authentication & Endpoint URL
 In order to secure authentication to requests, AWS Signature is used.
 Get outputs from the stack once the infrastructure is deployed running:
+ * **The below cmdlet retrieve the keys and endpoints required for testing**
  ```
  make get_stack_info
  ```
- * **The below cmdlet retrieve the keys and endpoints required for testing**
 
 **List Images**
 ----
