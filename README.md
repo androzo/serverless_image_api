@@ -1,6 +1,6 @@
 # Image API
 
-This stack creates a REST API using serverless architecture.
+This stack creates a REST API using serverless architecture in AWS. Two features are available in the API, save an image from a URL to an S3 Bucket, and list all images saved on the Bucket.
 
 ![Design](design.png?raw=true "Architecture design diagram")
 
@@ -62,7 +62,7 @@ In order to secure authentication to requests, AWS Signature is used.
 
 * **Data Params**
 
-  `{"url": "https://icons.com/icon_f7021.png","name": "my_icon.png"}`
+  `{ "url": "https://a_sample_image_site.com/some_image.png","name": "my_image.png" }`
 
 * **Success Response:**
 
