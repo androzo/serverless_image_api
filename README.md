@@ -22,7 +22,7 @@ $ export stack_name=sample-image-api-stack \
 ```
 <_To change these values later run "unset my_var" and run the export command again_>
 
-Deploys the infrastructure to AWS account that is configured in the awscli:
+**Deploys the infrastructure to AWS account that is configured in the awscli:**
 ```
 $ make create
 ```
