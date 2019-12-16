@@ -2,7 +2,7 @@
 
 This stack creates a REST API using serverless architecture.
 
-![Design](design.jpg?raw=true "Architecture design diagram")
+![Design](design.png?raw=true "Architecture design diagram")
 
 ## Requirements
 
