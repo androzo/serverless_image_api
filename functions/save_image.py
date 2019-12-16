@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     try:
         url = event["url"]
         name = event["name"]
-        bucket = "api-test-2019-saved-images"
+        bucket = "image-api-2019-saved-images"
         s3_path = f"s3://{bucket}/{name}"
         hash = random.getrandbits(128)
         save_id = "%032x" % hash
@@ -35,7 +35,7 @@ def lambda_handler(event, context):
         
         # save info on database table
         dynamodb = boto3.client('dynamodb')
-        dynamodb.put_item(TableName='api-test-table', Item={'SaveId':{'S': save_id},'Name':{'S': name}, 'Url':{'S': url}, 'S3Path':{'S': s3_path}, 'Date':{'S': date_time}})
+        dynamodb.put_item(TableName='image-api-table', Item={'SaveId':{'S': save_id},'Name':{'S': name}, 'Url':{'S': url}, 'S3Path':{'S': s3_path}, 'Date':{'S': date_time}})
 
         return {
             "result" : "Saved successfully",

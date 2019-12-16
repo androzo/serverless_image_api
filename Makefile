@@ -17,26 +17,26 @@ load_lambda:
 	
 	@echo
 	@echo '[Creating new S3 Bucket..]'
-	-aws s3api create-bucket --bucket api-test-2019-lambda-functions --region us-east-1
+	-aws s3api create-bucket --bucket image-api-2019-lambda-functions --region us-east-1
 	
 	@echo
 	@echo '[Uploading lambda functions to S3 Bucket..]'
-	aws s3 cp functions/save_image.zip s3://api-test-2019-lambda-functions/
-	aws s3 cp functions/list_image.zip s3://api-test-2019-lambda-functions/
+	aws s3 cp functions/save_image.zip s3://image-api-2019-lambda-functions/
+	aws s3 cp functions/list_image.zip s3://image-api-2019-lambda-functions/
 
 deploy_stack:
 	@echo
 	@echo '[Deploying stack..]'
-	aws cloudformation create-stack --stack-name api-test --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
+	aws cloudformation create-stack --stack-name image-api --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
 
 delete_stack:
 	@echo
 	@echo '[Cleaning images S3 Bucket]'
-	-aws s3 rm s3://api-test-2019-saved-images --recursive
+	-aws s3 rm s3://image-api-2019-saved-images --recursive
 	
 	@echo
 	@echo '[Deleting stack..]'
-	aws cloudformation delete-stack --stack-name api-test
+	aws cloudformation delete-stack --stack-name image-api
 
 unload_lambda:
 	@echo
@@ -47,24 +47,24 @@ unload_lambda:
 	
 	@echo
 	@echo '[Cleaning S3 Bucket..]'
-	-aws s3 rm s3://api-test-2019-lambda-functions --recursive
+	-aws s3 rm s3://image-api-2019-lambda-functions --recursive
 	
 	@echo
 	@echo '[Deleting S3 Bucket..]'
-	-aws s3 rb s3://api-test-2019-lambda-functions
+	-aws s3 rb s3://image-api-2019-lambda-functions
 
 update_stack:
 	@echo
 	@echo '[Updating stack..]'
-	aws cloudformation update-stack --stack-name api-test --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
+	aws cloudformation update-stack --stack-name image-api --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
 
 get_keys:
 	@echo
-	aws cloudformation describe-stacks --stack-name api-test --query 'Stacks[0].Outputs[0].OutputValue'
-	aws cloudformation describe-stacks --stack-name api-test --query 'Stacks[0].Outputs[1].OutputValue'
+	aws cloudformation describe-stacks --stack-name image-api --query 'Stacks[0].Outputs[0].OutputValue'
+	aws cloudformation describe-stacks --stack-name image-api --query 'Stacks[0].Outputs[1].OutputValue'
 
 get_endpoints:
 	@echo "[List Images Endpoint]"	
-	aws cloudformation describe-stacks --stack-name api-test --query 'Stacks[0].Outputs[2].OutputValue'
+	aws cloudformation describe-stacks --stack-name image-api --query 'Stacks[0].Outputs[2].OutputValue'
 	@echo "[Save Image Endpoint]"
-	aws cloudformation describe-stacks --stack-name api-test --query 'Stacks[0].Outputs[3].OutputValue'
+	aws cloudformation describe-stacks --stack-name image-api --query 'Stacks[0].Outputs[3].OutputValue'

@@ -1,6 +1,6 @@
-# API Test
+# Image API
 
-This stack creates two rest APIs using serverless architecture.
+This stack creates a REST API using serverless architecture.
 
 
 ## Requirements

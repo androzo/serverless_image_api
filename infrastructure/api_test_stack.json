@@ -94,7 +94,7 @@
                   "Sid":"RestAPICaller003",
                   "Effect":"Allow",
                   "Action":"s3:GetObject",
-                  "Resource":"arn:aws:s3:::api-test-2019-saved-images/*"
+                  "Resource":"arn:aws:s3:::image-api-2019-saved-images/*"
                },
                {
                   "Sid":"RestAPICaller004",
@@ -132,13 +132,13 @@
           "DependsOn":"IAMLambdaServiceRole",
           "Type": "AWS::S3::Bucket",
           "Properties": {
-              "BucketName" : "api-test-2019-saved-images"
+              "BucketName" : "image-api-2019-saved-images"
           }
       },
       "BucketPolicy": {
         "Type": "AWS::S3::BucketPolicy",
         "Properties": {
-          "Bucket": "api-test-2019-saved-images",
+          "Bucket": "image-api-2019-saved-images",
           "PolicyDocument": {
             "Version": "2012-10-17",
             "Statement": [
@@ -148,7 +148,7 @@
                   "s3:GetObject",
                   "s3:PutObject"
                 ],
-                "Resource": "arn:aws:s3:::api-test-2019-saved-images/*",
+                "Resource": "arn:aws:s3:::image-api-2019-saved-images/*",
                 "Condition": {},
                 "Principal":{
                     "AWS":[
@@ -251,7 +251,7 @@
            "Handler":"list_image.lambda_handler",
            "Runtime":"python3.6",
            "Code":{              
-              "S3Bucket":"api-test-2019-lambda-functions",
+              "S3Bucket":"image-api-2019-lambda-functions",
               "S3Key":"list_image.zip"
            },
            "MemorySize":1024,
@@ -272,7 +272,7 @@
            "Handler":"save_image.lambda_handler",
            "Runtime":"python3.6",
            "Code":{              
-              "S3Bucket":"api-test-2019-lambda-functions",
+              "S3Bucket":"image-api-2019-lambda-functions",
               "S3Key":"save_image.zip"
            },
            "MemorySize":1024,
@@ -654,7 +654,7 @@
    "DynamoDBTable" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-	"TableName" : "api-test-table",
+	"TableName" : "image-api-table",
         "AttributeDefinitions" : [
           {
             "AttributeName" : "SaveId",

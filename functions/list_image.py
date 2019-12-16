@@ -3,7 +3,7 @@ import boto3
 def lambda_handler(event, context):
     try:
         s3 = boto3.resource('s3')
-        bucket = s3.Bucket('api-test-2019-saved-images')
+        bucket = s3.Bucket('image-api-2019-saved-images')
         response = {"saved_images":[]}
 
         for bucket_obj in bucket.objects.all():
@@ -13,6 +13,6 @@ def lambda_handler(event, context):
 
     except BaseException as error:
         return {
-            "result" : "Failed list images",
+            "result" : "Failed to list images",
             "error" : str(error)
         }
