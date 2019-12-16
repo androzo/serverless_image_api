@@ -7,7 +7,7 @@ This stack creates a REST API using serverless architecture in AWS. Two features
 ## Requirements
 
 * Linux or MacOS
-* Python 3.7
+* Python 3.x
   * pip3 (`python3 -m pip install --upgrade pip`)
 * AWS cli installed and configured [https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-install.html]
 * Postman _(only to test API calls, or any other AWS Signature compatible tool)_
