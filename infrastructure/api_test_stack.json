@@ -1,4 +1,14 @@
 {
+  "Parameters": {
+   "ImageS3BucketName" : {
+      "Type" : "String",
+      "Default" : "image-api-2019-saved-images"
+    },
+    "LambdaS3BucketName" : {
+      "Type" : "String",
+      "Default" : "image-api-2019-lambda-functions"
+    }
+  },
   "Outputs" : {
       "AccessKeyID" : {
       "Description" : "API Caller access key",
@@ -94,7 +104,7 @@
                   "Sid":"RestAPICaller003",
                   "Effect":"Allow",
                   "Action":"s3:GetObject",
-                  "Resource":"arn:aws:s3:::image-api-2019-saved-images/*"
+                  "Resource": { "Fn::Sub" : [ "arn:aws:s3:::${BucketName}/*", { "BucketName": {"Ref" : "ImageS3BucketName"}} ]}                  
                },
                {
                   "Sid":"RestAPICaller004",
@@ -132,13 +142,13 @@
           "DependsOn":"IAMLambdaServiceRole",
           "Type": "AWS::S3::Bucket",
           "Properties": {
-              "BucketName" : "image-api-2019-saved-images"
+              "BucketName" : {"Ref": "ImageS3BucketName"}
           }
       },
       "BucketPolicy": {
         "Type": "AWS::S3::BucketPolicy",
         "Properties": {
-          "Bucket": "image-api-2019-saved-images",
+          "Bucket": {"Ref": "ImageS3BucketName"},
           "PolicyDocument": {
             "Version": "2012-10-17",
             "Statement": [
@@ -148,7 +158,7 @@
                   "s3:GetObject",
                   "s3:PutObject"
                 ],
-                "Resource": "arn:aws:s3:::image-api-2019-saved-images/*",
+                "Resource": { "Fn::Sub" : [ "arn:aws:s3:::${BucketName}/*", { "BucketName": {"Ref" : "ImageS3BucketName"}} ]},
                 "Condition": {},
                 "Principal":{
                     "AWS":[
@@ -245,13 +255,14 @@
      },
      "ListImageAPIFunction":{
         "Type":"AWS::Lambda::Function",
+        "DependsOn" : "S3Bucket",
         "Properties":{
            "FunctionName":"list-images",
            "Description":"Function to Get Vehicle Image from S3 Bucket",
            "Handler":"list_image.lambda_handler",
            "Runtime":"python3.6",
            "Code":{              
-              "S3Bucket":"image-api-2019-lambda-functions",
+              "S3Bucket": {"Ref" : "LambdaS3BucketName"},
               "S3Key":"list_image.zip"
            },
            "MemorySize":1024,
@@ -261,18 +272,24 @@
                  "Arn"
               ]
            },
-           "Timeout":60
+           "Timeout":60,
+           "Environment" : {
+            "Variables" : { 
+               "BUCKET" : {"Ref":"ImageS3BucketName"}
+            }
+         }
         }
      },
      "SaveImageAPIFunction":{
         "Type":"AWS::Lambda::Function",
+        "DependsOn" : "S3Bucket",
         "Properties":{
            "FunctionName":"save-image",
            "Description":"Function to Get Vehicle Image from S3 Bucket",
            "Handler":"save_image.lambda_handler",
            "Runtime":"python3.6",
            "Code":{              
-              "S3Bucket":"image-api-2019-lambda-functions",
+              "S3Bucket": {"Ref" : "LambdaS3BucketName"},
               "S3Key":"save_image.zip"
            },
            "MemorySize":1024,
@@ -282,7 +299,12 @@
                 "Arn"
             ]
           },
-          "Timeout":60
+          "Timeout":60,
+          "Environment" : {
+              "Variables" : { 
+                 "BUCKET" : {"Ref":"ImageS3BucketName"}
+              }
+           }
         }
      },
      "IAMAPIServiceRole":{
@@ -654,7 +676,7 @@
    "DynamoDBTable" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-	"TableName" : "image-api-table",
+	   "TableName" : "image-api-table",
         "AttributeDefinitions" : [
           {
             "AttributeName" : "SaveId",

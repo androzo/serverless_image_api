@@ -1,5 +1,3 @@
-#!/bin/bash
-
 create: load_lambda deploy_stack
 
 destroy: delete_stack unload_lambda
@@ -17,26 +15,30 @@ load_lambda:
 	
 	@echo
 	@echo '[Creating new S3 Bucket..]'
-	-aws s3api create-bucket --bucket image-api-2019-lambda-functions --region us-east-1
+	-aws s3api create-bucket --bucket $(lambda_bucket) --region us-east-1
 	
 	@echo
 	@echo '[Uploading lambda functions to S3 Bucket..]'
-	aws s3 cp functions/save_image.zip s3://image-api-2019-lambda-functions/
-	aws s3 cp functions/list_image.zip s3://image-api-2019-lambda-functions/
+	aws s3 cp functions/save_image.zip s3://$(lambda_bucket)/
+	aws s3 cp functions/list_image.zip s3://$(lambda_bucket)/
 
 deploy_stack:
 	@echo
 	@echo '[Deploying stack..]'
-	aws cloudformation create-stack --stack-name image-api --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
+	aws cloudformation create-stack \
+		--stack-name $(stack_name) \
+		--template-body 'file://./infrastructure/api_test_stack.json' \
+		--capabilities CAPABILITY_NAMED_IAM \
+		--parameters ParameterKey=ImageS3BucketName,ParameterValue=$(image_bucket) ParameterKey=LambdaS3BucketName,ParameterValue=$(lambda_bucket)
 
 delete_stack:
 	@echo
 	@echo '[Cleaning images S3 Bucket]'
-	-aws s3 rm s3://image-api-2019-saved-images --recursive
+	-aws s3 rm s3://$(image_bucket) --recursive
 	
 	@echo
 	@echo '[Deleting stack..]'
-	aws cloudformation delete-stack --stack-name image-api
+	aws cloudformation delete-stack --stack-name $(stack_name)
 
 unload_lambda:
 	@echo
@@ -47,24 +49,21 @@ unload_lambda:
 	
 	@echo
 	@echo '[Cleaning S3 Bucket..]'
-	-aws s3 rm s3://image-api-2019-lambda-functions --recursive
+	-aws s3 rm s3://$(lambda_bucket) --recursive
 	
 	@echo
 	@echo '[Deleting S3 Bucket..]'
-	-aws s3 rb s3://image-api-2019-lambda-functions
+	-aws s3 rb s3://$(lambda_bucket)
 
 update_stack:
 	@echo
 	@echo '[Updating stack..]'
-	aws cloudformation update-stack --stack-name image-api --template-body 'file://./infrastructure/api_test_stack.json' --capabilities CAPABILITY_NAMED_IAM
+	aws cloudformation update-stack --stack-name $(stack_name) \
+		--template-body 'file://./infrastructure/api_test_stack.json' \
+		--capabilities CAPABILITY_NAMED_IAM \
+		--parameters ParameterKey=ImageS3BucketName,ParameterValue=$(image_bucket) ParameterKey=LambdaS3BucketName,ParameterValue=$(lambda_bucket) 
 
-get_keys:
-	@echo
-	aws cloudformation describe-stacks --stack-name image-api --query 'Stacks[0].Outputs[0].OutputValue'
-	aws cloudformation describe-stacks --stack-name image-api --query 'Stacks[0].Outputs[1].OutputValue'
-
-get_endpoints:
-	@echo "[List Images Endpoint]"	
-	aws cloudformation describe-stacks --stack-name image-api --query 'Stacks[0].Outputs[2].OutputValue'
-	@echo "[Save Image Endpoint]"
-	aws cloudformation describe-stacks --stack-name image-api --query 'Stacks[0].Outputs[3].OutputValue'
+get_stack_info:
+	aws cloudformation describe-stacks --stack-name $(stack_name) --query 'Stacks[0].Outputs[0].OutputValue'
+	aws cloudformation describe-stacks --stack-name $(stack_name) --query 'Stacks[0].Outputs[1].OutputValue'
+	aws cloudformation describe-stacks --stack-name $(stack_name) --query 'Stacks[0].Outputs[2].OutputValue'

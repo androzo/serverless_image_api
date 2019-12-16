@@ -1,9 +1,10 @@
 import boto3
+import os
 
 def lambda_handler(event, context):
-    try:
+    try:        
         s3 = boto3.resource('s3')
-        bucket = s3.Bucket('image-api-2019-saved-images')
+        bucket = s3.Bucket(os.environ['BUCKET'])
         response = {"saved_images":[]}
 
         for bucket_obj in bucket.objects.all():

@@ -10,17 +10,31 @@ This stack creates a REST API using serverless architecture in AWS. Two features
 * Postman (or another AWS Signature compatible tool)
 * Linux or MacOS
 
-### Deploy
+## Deploy the infrastructure
+First you need to set your environment variables in order to customize resource names as you like:
+* stack_name: CloudFormation Stack
+* image_bucket: S3 Bucket that will store saved images
+* lambda_bucket: S3 BUcket that will store Lambda functions
+```
+$ export stack_name=sample-image-api-stack \
+         image_bucket=sample-image-api-saved-images \
+         lambda_bucket=sample-image-api-functions
+```
+<_To change these values later run "unset my_var" and run the export command again_>
+
 Deploys the infrastructure to AWS account that is configured in the awscli:
 ```
-$ make all
+$ make create
 ```
 *Additionally, you can run `make update_stack` to update your stack, and `make destroy` to tear down the environment.
 
-## Authentication
+## Authentication & Endpoint URL
 In order to secure authentication to requests, AWS Signature is used.
-- Run `make get_keys` to retrieve keys automatically generated
-- Run `make get_endpoints` to retrieve API Gateway endpoints
+Get outputs from the stack once the infrastructure is deployed running:
+ ```
+ make get_stack_info
+ ```
+ * The below cmdlet retrieve the keys and endpoints required for testing
 
 **List Images**
 ----
@@ -73,6 +87,10 @@ In order to secure authentication to requests, AWS Signature is used.
 
     **Content:** `{ result : "Failed to save image",  error : "<error_stack>" }`
 
+## Future improvements
+* Encrypt S3 Bucket using KMS keys in Lambda
+* Replace AWS Signature authentication method by tokens
+* Create automated REST API tests
 
 ## AWS Cloudformation Resources
 - AWS::IAM::User

@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     try:
         url = event["url"]
         name = event["name"]
-        bucket = "image-api-2019-saved-images"
+        bucket = os.environ['BUCKET']
         s3_path = f"s3://{bucket}/{name}"
         hash = random.getrandbits(128)
         save_id = "%032x" % hash
