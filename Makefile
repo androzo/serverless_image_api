@@ -5,7 +5,7 @@ destroy: delete_stack unload_lambda
 load_lambda:
 	@echo
 	@echo '[Installing dependencies..]'	
-	pip install requests -t functions/.packages/
+	pip3 install requests -t functions/.packages/
 	
 	@echo
 	@echo '[Zipping lambda functions..]'

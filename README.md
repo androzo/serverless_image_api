@@ -6,9 +6,11 @@ This stack creates a REST API using serverless architecture in AWS. Two features
 
 ## Requirements
 
+* Linux or MacOS
+* Python 3.7
+  * pip3 (`python3 -m pip install --upgrade pip`)
 * AWS cli installed and configured [https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-install.html]
 * Postman _(only to test API calls, or any other AWS Signature compatible tool)_
-* Linux or MacOS
 
 ## Deploy the infrastructure
 First, you need to set your environment variables in order to customize resource names as you like:
@@ -35,6 +37,12 @@ Get outputs from the stack once the infrastructure is deployed running:
  ```
  make get_stack_info
  ```
+### AWS Signature params
+AWS Signature parameters are required to be informed on the request:
+* AccessKey: _access key_
+* SecretKey: _secret key_
+* Region: us-east-1
+* Service: execute-api
 
 **List Images**
 ----
@@ -92,7 +100,6 @@ The `/save_image` method also saves additional information to a DynamoDB table, 
 ```
 make query_dynamodb
 ```
-
 
 ## Future improvements
 * Encrypt S3 Bucket using KMS keys in Lambda
