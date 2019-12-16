@@ -34,7 +34,7 @@ Get outputs from the stack once the infrastructure is deployed running:
  ```
  make get_stack_info
  ```
- * The below cmdlet retrieve the keys and endpoints required for testing
+ * **The below cmdlet retrieve the keys and endpoints required for testing**
 
 **List Images**
 ----
@@ -86,6 +86,13 @@ Get outputs from the stack once the infrastructure is deployed running:
 * **Error Response:**
 
     **Content:** `{ result : "Failed to save image",  error : "<error_stack>" }`
+
+## DynamoDB
+The `/save_image` method also saves additional information to a DynamoDB table, query items in the table using the below cmdlet:
+```
+make query_dynamodb
+```
+
 
 ## Future improvements
 * Encrypt S3 Bucket using KMS keys in Lambda

@@ -67,3 +67,6 @@ get_stack_info:
 	aws cloudformation describe-stacks --stack-name $(stack_name) --query 'Stacks[0].Outputs[0].OutputValue'
 	aws cloudformation describe-stacks --stack-name $(stack_name) --query 'Stacks[0].Outputs[1].OutputValue'
 	aws cloudformation describe-stacks --stack-name $(stack_name) --query 'Stacks[0].Outputs[2].OutputValue'
+
+query_dynamodb:
+	aws dynamodb scan --table-name 'image-api-table'
