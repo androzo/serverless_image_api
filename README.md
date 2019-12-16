@@ -6,8 +6,8 @@ This stack creates a REST API using serverless architecture in AWS. Two features
 
 ## Requirements
 
-* AWS cli installed and configured https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-install.html
-* Postman (or another AWS Signature compatible tool)
+* AWS cli installed and configured [https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-install.html]
+* Postman _(only to test API calls, or any other AWS Signature compatible tool)_
 * Linux or MacOS
 
 ## Deploy the infrastructure
